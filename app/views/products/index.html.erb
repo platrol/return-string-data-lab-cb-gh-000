@@ -1,1 +1,32 @@
+<h1>products</h1>
+<% @product.each do |product| %>
+  <h4><%=	 product.name %></h4><span id="inventory-<%= product.id %>"></span>
+  <p id="description-<%= product.id %>"><%=	truncate product.description  %></p>
+  <button data-id="<%= product.id %>" class="js-more">More Info</button>
+  <br>
+<% end %>
 
+
+<script type="text/javascript" charset="utf-8">
+  $(function() {
+      $('.js-more').on('click', function () {
+          var id = this.dataset.id;
+          $.get('/products/' + id + '/description', function (response) {
+              $('#description-' + id).text(response)
+          });
+          fetch('/products/' + id + '/inventory')
+              .then(resp => resp.text())
+              .then(text => {
+              if (text === "true") {
+              $('#inventory-' + id).text('Available')
+          } else {
+              $('#inventory-' + id).text('Sold Oute')
+          }
+      })
+
+      });
+
+
+  })
+
+</script>
